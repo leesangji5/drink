@@ -8,6 +8,7 @@ import playsound
 import serial
 
 # 아두이노 시리얼 모니터
+# timeout 없으면 계속 기다려서 무한 루프에 빠짐
 ser = serial.Serial('COM9', 9600, timeout=0.1)
 
 # 모델 불러오기
@@ -125,11 +126,11 @@ while True:
     num = 0
     if ser.readable():
         # 보정 안한 값 = b'1\r\n'
+        # b는 byte형식
         # \r\n기준으로 나누어서 [b'1', b'']으로 나뉨
         # b'1'만 가져옴
         # b'1'을 decode('utf-8')로 문자열로 변환
         # 보정 한 값 = 1
-
         a = ser.readline().split(b'\r\n')[0].decode('utf-8')
         if a != '':
             num = int(a)
@@ -148,7 +149,7 @@ while True:
         elif drinkName == 'coke':
             speakDrinkInfo(drinkCoke, [0, 1])
     elif num == 3:
-        # 영양 정보 출력
+        # 영양 정보 출력 (칼로리, 탄수화물, 단백질, 지방, 나트륨, 당류)
         if drinkName == '2pro':
             speakDrinkInfo(drink2pro, [2, 3, 4, 5, 6, 7])
         elif drinkName == 'cider':
